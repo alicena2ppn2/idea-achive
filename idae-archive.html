@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>idae archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Bodoni+Moda:ital,wght@1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-dark: #050508;
+    --pink: #f472b6;
+    --pink-glow: rgba(244,114,182,0.6);
+    --blue-star: #67e8f9;
+    --purple: #a78bfa;
+    --yellow: #fde68a;
+    --green: #86efac;
+  }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background: var(--bg-dark);
+    color: white;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    cursor: default;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+  }
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ─── STAR PARTICLE ─── */
+  .star-particle {
+    position: absolute;
+    pointer-events: none;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite var(--delay, 0s);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--min-op, 0.3); transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  /* ══════════════════════════════
+     SCREEN 1 — LANDING
+  ══════════════════════════════ */
+  #screen-landing {
+    background: radial-gradient(ellipse at 50% 80%, #1a3a4a 0%, #0a1520 40%, #050508 70%);
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .landing-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* Central starburst */
+  .starburst {
+    position: relative;
+    width: 340px;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    animation: pulse-star 4s ease-in-out infinite;
+  }
+  @keyframes pulse-star {
+    0%, 100% { filter: drop-shadow(0 0 40px rgba(244,114,182,0.5)); }
+    50% { filter: drop-shadow(0 0 80px rgba(244,114,182,0.9)); }
+  }
+
+  .starburst svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .title-text {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+  }
+
+  .title-text h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4rem;
+    color: #fce4ec;
+    text-shadow: 0 0 30px rgba(244,114,182,0.8), 0 0 60px rgba(244,114,182,0.4);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  /* START button */
+  .start-btn-wrap {
+    position: relative;
+    z-index: 10;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .start-btn {
+    position: relative;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 160px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .start-btn-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .start-btn-box {
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid rgba(244,114,182,0.7);
+    border-radius: 4px;
+    background: rgba(244,114,182,0.05);
+    box-shadow: 0 0 20px rgba(244,114,182,0.3), inset 0 0 20px rgba(244,114,182,0.05);
+    animation: btn-shimmer 3s ease-in-out infinite;
+  }
+  @keyframes btn-shimmer {
+    0%, 100% { box-shadow: 0 0 20px rgba(244,114,182,0.3), inset 0 0 20px rgba(244,114,182,0.05); border-color: rgba(244,114,182,0.7); }
+    50% { box-shadow: 0 0 40px rgba(244,114,182,0.7), 0 0 80px rgba(244,114,182,0.2), inset 0 0 30px rgba(244,114,182,0.1); border-color: rgba(244,114,182,1); }
+  }
+
+  /* corner sparks */
+  .start-btn-box::before, .start-btn-box::after {
+    content: '✦';
+    position: absolute;
+    font-size: 10px;
+    color: var(--pink);
+    animation: corner-twinkle 2s ease-in-out infinite;
+  }
+  .start-btn-box::before { top: -8px; left: -8px; }
+  .start-btn-box::after { bottom: -8px; right: -8px; animation-delay: 1s; }
+  @keyframes corner-twinkle {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  .start-btn span {
+    font-family: 'Bodoni Moda', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    letter-spacing: 0.35em;
+    color: rgba(252,228,236,0.95);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 0 20px rgba(244,114,182,0.8);
+  }
+
+  .start-btn:hover .start-btn-box {
+    box-shadow: 0 0 60px rgba(244,114,182,0.9), 0 0 120px rgba(244,114,182,0.4), inset 0 0 40px rgba(244,114,182,0.15);
+    border-color: white;
+    background: rgba(244,114,182,0.1);
+  }
+  .start-btn:hover span { color: white; }
+
+  /* ══════════════════════════════
+     TRANSITION OVERLAY
+  ══════════════════════════════ */
+  #transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    background: var(--bg-dark);
+  }
+
+  .transition-stars {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* ══════════════════════════════
+     SCREEN 2 — ARCHIVE
+  ══════════════════════════════ */
+  #screen-archive {
+    background: radial-gradient(ellipse at 50% 100%, #0d1f3c 0%, #050810 50%, #020305 100%);
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .archive-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    background: linear-gradient(to bottom, rgba(2,3,5,0.9) 0%, transparent 100%);
+  }
+
+  .archive-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.8rem;
+    color: #fce4ec;
+    text-shadow: 0 0 20px rgba(244,114,182,0.6);
+  }
+
+  .add-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(244,114,182,0.6);
+    background: rgba(244,114,182,0.08);
+    color: var(--pink);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(244,114,182,0.2);
+    line-height: 1;
+  }
+  .add-btn:hover {
+    background: rgba(244,114,182,0.2);
+    box-shadow: 0 0 40px rgba(244,114,182,0.5);
+    transform: scale(1.1) rotate(90deg);
+    border-color: var(--pink);
+  }
+
+  /* Orb container - scrollable */
+  .orb-space {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 100px 20px 120px;
+    scrollbar-width: none;
+  }
+  .orb-space::-webkit-scrollbar { display: none; }
+
+  .orb-field {
+    min-height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0;
+    padding-bottom: 40px;
+  }
+
+  .empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    line-height: 2;
+    pointer-events: none;
+  }
+  .empty-state .empty-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+
+  /* ORB */
+  .orb-item {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 30px auto;
+    cursor: pointer;
+    animation: orb-float var(--float-dur, 6s) ease-in-out infinite var(--float-delay, 0s);
+    transition: transform 0.3s ease;
+  }
+
+  /* Stagger horizontal */
+  .orb-item:nth-child(3n+1) { margin-left: 15%; }
+  .orb-item:nth-child(3n+2) { margin-left: -10%; }
+  .orb-item:nth-child(3n+3) { margin-left: 5%; }
+
+  @keyframes orb-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .orb-item:hover { transform: scale(1.12); }
+
+  .orb-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(1.05) saturate(1.1);
+  }
+
+  .orb-glow {
+    position: absolute;
+    inset: -15px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--glow-color, rgba(244,114,182,0.3)) 0%, transparent 70%);
+    animation: orb-pulse 4s ease-in-out infinite var(--float-delay, 0s);
+    pointer-events: none;
+  }
+  @keyframes orb-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  /* ══════════════════════════════
+     SCREEN 3 — INPUT
+  ══════════════════════════════ */
+  #screen-input {
+    background: radial-gradient(ellipse at 30% 40%, #1a0a2e 0%, #050810 50%, #020208 100%);
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .input-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+  }
+
+  .back-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Bodoni Moda', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+  }
+  .back-btn:hover { border-color: rgba(255,255,255,0.5); color: white; }
+
+  .input-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.5rem;
+    color: rgba(252,228,236,0.7);
+    text-shadow: 0 0 20px rgba(167,139,250,0.5);
+  }
+
+  /* Nebula background particles for input */
+  .input-nebula {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .nebula-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.15;
+    animation: nebula-drift var(--nd, 8s) ease-in-out infinite var(--ndelay, 0s) alternate;
+  }
+  @keyframes nebula-drift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(var(--dx, 20px), var(--dy, 20px)) scale(1.1); }
+  }
+
+  .input-center {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+    max-width: 640px;
+    padding: 0 32px;
+  }
+
+  .input-prompt {
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    color: rgba(167,139,250,0.7);
+    text-transform: uppercase;
+  }
+
+  .idea-textarea {
+    width: 100%;
+    min-height: 180px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 16px;
+    padding: 24px;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    caret-color: var(--purple);
+  }
+  .idea-textarea::placeholder {
+    color: rgba(167,139,250,0.3);
+    font-style: italic;
+  }
+  .idea-textarea:focus {
+    border-color: rgba(167,139,250,0.7);
+    box-shadow: 0 0 40px rgba(167,139,250,0.1), inset 0 0 20px rgba(167,139,250,0.03);
+  }
+
+  /* Similar ideas that float nearby */
+  .similar-ideas {
+    position: absolute;
+    right: -180px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    pointer-events: none;
+  }
+
+  .similar-orb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.5s ease;
+    cursor: pointer;
+    pointer-events: all;
+  }
+  .similar-orb.visible {
+    opacity: 1;
+    transform: translateX(0);
+    animation: similar-float 4s ease-in-out infinite;
+  }
+  @keyframes similar-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .similar-orb-img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: brightness(0.8);
+  }
+
+  .similar-label {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    max-width: 100px;
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+  }
+
+  /* FINISH button */
+  .finish-btn {
+    position: relative;
+    background: transparent;
+    border: 1.5px solid rgba(167,139,250,0.7);
+    border-radius: 30px;
+    padding: 14px 52px;
+    color: rgba(232,222,255,0.95);
+    font-family: 'Bodoni Moda', serif;
+    font-style: italic;
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(167,139,250,0.2);
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  .finish-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(244,114,182,0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .finish-btn:hover {
+    box-shadow: 0 0 60px rgba(167,139,250,0.4), 0 0 100px rgba(167,139,250,0.2);
+    border-color: rgba(167,139,250,1);
+    transform: translateY(-2px);
+  }
+  .finish-btn:hover::before { opacity: 1; }
+
+  /* ══════════════════════════════
+     SCREEN 4 — DETAIL
+  ══════════════════════════════ */
+  #screen-detail {
+    background: radial-gradient(ellipse at 50% 50%, #0d1520 0%, #020305 100%);
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .detail-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+  }
+
+  .detail-orb-hero {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin-bottom: 24px;
+    animation: orb-float 6s ease-in-out infinite;
+  }
+  .detail-orb-hero img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: brightness(1.1) saturate(1.2);
+  }
+  .detail-orb-glow {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--glow-color, rgba(167,139,250,0.4)) 0%, transparent 70%);
+    animation: orb-pulse 4s ease-in-out infinite;
+  }
+
+  .detail-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 560px;
+    padding: 0 32px;
+  }
+
+  .detail-date {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  .detail-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    font-weight: 300;
+  }
+
+  .detail-edit-area {
+    width: 100%;
+    min-height: 120px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px 20px;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    display: none;
+  }
+  .detail-edit-area:focus { border-color: rgba(167,139,250,0.5); }
+
+  .detail-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+  }
+
+  .action-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    padding: 8px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Bodoni Moda', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    transition: all 0.3s;
+  }
+  .action-btn:hover { border-color: rgba(255,255,255,0.4); color: white; }
+  .action-btn.delete { border-color: rgba(244,114,182,0.3); color: rgba(244,114,182,0.6); }
+  .action-btn.delete:hover { border-color: var(--pink); color: var(--pink); background: rgba(244,114,182,0.05); }
+  .action-btn.save { border-color: rgba(167,139,250,0.5); color: rgba(167,139,250,0.8); display: none; }
+  .action-btn.save:hover { border-color: var(--purple); color: var(--purple); }
+
+  /* ══════════════════════════════
+     LAUNCH ANIMATION
+  ══════════════════════════════ */
+  .launch-orb {
+    position: fixed;
+    z-index: 200;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: all 0s;
+  }
+
+  /* ══════════════════════════════
+     FLOATING STARS (bg)
+  ══════════════════════════════ */
+  .bg-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ══════════════════════════════
+     NOTIFICATION
+  ══════════════════════════════ */
+  .notif {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(20,10,40,0.9);
+    border: 1px solid rgba(167,139,250,0.4);
+    color: rgba(232,222,255,0.9);
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: all 0.4s ease;
+    z-index: 500;
+    backdrop-filter: blur(10px);
+  }
+  .notif.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* scrollbar for archive */
+  .orb-space { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- ══ SCREEN 1: LANDING ══ -->
+<div class="screen" id="screen-landing">
+  <div class="landing-bg" id="landing-bg"></div>
+
+  <div style="position:relative; z-index:5; display:flex; flex-direction:column; align-items:center;">
+    <div class="starburst">
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="sg1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
+            <stop offset="30%" stop-color="#f9a8d4" stop-opacity="0.8"/>
+            <stop offset="70%" stop-color="#f472b6" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#be185d" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="glow-filter">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- glow -->
+        <ellipse cx="170" cy="170" rx="130" ry="130" fill="url(#sg1)" opacity="0.3"/>
+        <!-- main spike vertical -->
+        <polygon points="170,10 178,168 170,330 162,168" fill="url(#sg1)" filter="url(#glow-filter)"/>
+        <!-- main spike horizontal -->
+        <polygon points="10,170 168,178 330,170 168,162" fill="url(#sg1)" filter="url(#glow-filter)"/>
+        <!-- diagonal spikes -->
+        <polygon points="50,50 166,166 60,280 154,170" fill="url(#sg1)" opacity="0.6" filter="url(#glow-filter)"/>
+        <polygon points="290,50 174,166 280,280 186,170" fill="url(#sg1)" opacity="0.6" filter="url(#glow-filter)"/>
+        <!-- center glow -->
+        <circle cx="170" cy="170" r="30" fill="white" opacity="0.7" filter="url(#glow-filter)"/>
+        <circle cx="170" cy="170" r="15" fill="white" opacity="0.9"/>
+      </svg>
+      <div class="title-text">
+        <h1>idae archive</h1>
+      </div>
+    </div>
+
+    <div class="start-btn-wrap">
+      <button class="start-btn" id="start-btn">
+        <div class="start-btn-inner">
+          <div class="start-btn-box"></div>
+          <span>START</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TRANSITION OVERLAY ══ -->
+<div id="transition-overlay">
+  <div class="transition-stars" id="transition-stars"></div>
+</div>
+
+<!-- ══ SCREEN 2: ARCHIVE ══ -->
+<div class="screen hidden" id="screen-archive">
+  <div class="bg-stars" id="archive-bg-stars"></div>
+
+  <div class="archive-header">
+    <div class="archive-title">idae archive</div>
+    <button class="add-btn" id="add-btn" title="아이디어 추가">+</button>
+  </div>
+
+  <div class="orb-space" id="orb-space">
+    <div class="orb-field" id="orb-field">
+      <div class="empty-state" id="empty-state">
+        <span class="empty-icon">✦</span>
+        아직 아이디어가 없어요<br>
+        + 를 눌러 첫 번째 아이디어를 담아보세요
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: INPUT ══ -->
+<div class="screen hidden" id="screen-input">
+  <div class="input-nebula" id="input-nebula"></div>
+
+  <div class="input-header">
+    <button class="back-btn" id="input-back-btn">← back</button>
+    <div class="input-title">new idea</div>
+    <div style="width:80px"></div>
+  </div>
+
+  <div class="input-center" style="position:relative;">
+    <div class="input-prompt">what's on your mind?</div>
+    <div style="position:relative; width:100%;">
+      <textarea class="idea-textarea" id="idea-textarea" placeholder="아이디어를 자유롭게 적어보세요..."></textarea>
+      <div class="similar-ideas" id="similar-ideas"></div>
+    </div>
+    <button class="finish-btn" id="finish-btn">Finish</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 4: DETAIL ══ -->
+<div class="screen hidden" id="screen-detail">
+  <div class="bg-stars" id="detail-bg-stars"></div>
+
+  <div class="detail-header">
+    <button class="back-btn" id="detail-back-btn">← back</button>
+    <div style="width:80px"></div>
+  </div>
+
+  <div class="detail-content">
+    <div class="detail-orb-hero" id="detail-orb-hero">
+      <div class="detail-orb-glow" id="detail-orb-glow"></div>
+      <img id="detail-orb-img" src="" alt="">
+    </div>
+    <div class="detail-date" id="detail-date"></div>
+    <div class="detail-text" id="detail-text"></div>
+    <textarea class="detail-edit-area" id="detail-edit-area"></textarea>
+    <div class="detail-actions">
+      <button class="action-btn edit-btn" id="edit-btn">edit</button>
+      <button class="action-btn save save-btn" id="save-btn">save</button>
+      <button class="action-btn delete" id="delete-btn">delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification -->
+<div class="notif" id="notif"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────
+let ideas = JSON.parse(localStorage.getItem('idae-ideas') || '[]');
+let currentDetailId = null;
+let isEditing = false;
+
+// Orb image sets from the 3 uploaded reference images
+// We'll use CSS-generated orbs since we can't embed the actual images at this scale
+// Using beautiful CSS radial gradients inspired by the uploaded orb images
+const ORB_STYLES = [
+  // Thoughts — lavender/blue/gold
+  { bg: 'radial-gradient(circle at 40% 35%, #fff8e1 0%, #e8d5f5 20%, #b39ddb 45%, #7986cb 70%, #5c6bc0 100%)', glow: 'rgba(121,134,203,0.5)', shadow: '#7986cb' },
+  // Fearless — warm orange/red/gold
+  { bg: 'radial-gradient(circle at 50% 45%, #fff9c4 0%, #ffcc80 20%, #ff8a65 45%, #e53935 70%, #b71c1c 100%)', glow: 'rgba(229,57,53,0.5)', shadow: '#e53935' },
+  // Selfless — rainbow kaleidoscope
+  { bg: 'radial-gradient(circle at 50% 50%, #e1f5fe 0%, #81d4fa 20%, #4dd0e1 35%, #a5d6a7 50%, #c5e1a5 65%, #ce93d8 80%, #9c8dda 100%)', glow: 'rgba(77,208,225,0.5)', shadow: '#4dd0e1' },
+  // Focused Energy — pink/yellow orb
+  { bg: 'radial-gradient(circle at 45% 40%, #fff9c4 0%, #ffcc02 15%, #ff6d8b 40%, #e91e8c 65%, #c2185b 100%)', glow: 'rgba(233,30,140,0.5)', shadow: '#e91e8c' },
+  // Soul — white nebula
+  { bg: 'radial-gradient(circle at 50% 45%, #ffffff 0%, #e3f2fd 15%, #b3e5fc 30%, #c8e6c9 50%, #f8bbd0 70%, #ede7f6 90%, #b0bec5 100%)', glow: 'rgba(179,229,252,0.6)', shadow: '#b3e5fc' },
+  // Protective Energy — concentric pink/blue/teal
+  { bg: 'radial-gradient(circle at 50% 50%, #ff4081 0%, #f06292 15%, #4dd0e1 30%, #80cbc4 45%, #ef9a9a 60%, #ff8a65 75%, #ffcc80 100%)', glow: 'rgba(255,64,129,0.4)', shadow: '#ff4081' },
+  // Euphoric — hot pink blob
+  { bg: 'radial-gradient(ellipse at 40% 45%, #fce4ec 0%, #f48fb1 20%, #e91e63 50%, #c2185b 80%, #880e4f 100%)', glow: 'rgba(233,30,99,0.6)', shadow: '#e91e63' },
+  // Hope — blue/white orb
+  { bg: 'radial-gradient(circle at 45% 40%, #ffffff 0%, #e3f2fd 15%, #81d4fa 35%, #29b6f6 60%, #0288d1 85%, #01579b 100%)', glow: 'rgba(41,182,246,0.5)', shadow: '#29b6f6' },
+  // Connectivity — double orb iridescent
+  { bg: 'radial-gradient(circle at 35% 45%, #f5f5f5 0%, #e8eaf6 15%, #c5cae9 30%, #b2dfdb 50%, #e0f2f1 65%, #fce4ec 80%, #e8eaf6 100%)', glow: 'rgba(197,202,233,0.5)', shadow: '#c5cae9' },
+  // Inspired — blue sparkles
+  { bg: 'radial-gradient(ellipse at 40% 35%, #ffffff 0%, #e1f5fe 15%, #81d4fa 30%, #ce93d8 55%, #ab47bc 75%, #7b1fa2 100%)', glow: 'rgba(206,147,216,0.5)', shadow: '#ce93d8' },
+  // Love — deep red/crimson
+  { bg: 'radial-gradient(ellipse at 50% 45%, #ffcdd2 0%, #ef9a9a 20%, #c62828 50%, #7f0000 80%, #4a0000 100%)', glow: 'rgba(198,40,40,0.5)', shadow: '#c62828' },
+  // Grief — dark blue/teal rings
+  { bg: 'radial-gradient(circle at 50% 50%, #263238 0%, #37474f 15%, #4dd0e1 30%, #1a237e 50%, #283593 65%, #1565c0 80%, #0d47a1 100%)', glow: 'rgba(77,208,225,0.4)', shadow: '#4dd0e1' },
+  // Growth — red starburst
+  { bg: 'radial-gradient(circle at 45% 40%, #ffffff 0%, #ffcdd2 15%, #ef5350 35%, #c62828 60%, #b71c1c 100%)', glow: 'rgba(239,83,80,0.5)', shadow: '#ef5350' },
+  // Joy — white sparkle burst
+  { bg: 'radial-gradient(circle at 50% 50%, #ffffff 0%, #fff9c4 15%, #fff176 25%, #e8f5e9 40%, #e3f2fd 55%, #fce4ec 70%, #ede7f6 85%, #f5f5f5 100%)', glow: 'rgba(255,255,255,0.6)', shadow: '#ffffff' },
+  // Overwhelmed — dark purple/maroon
+  { bg: 'radial-gradient(ellipse at 45% 50%, #4a148c 0%, #6a1b9a 20%, #880e4f 45%, #311b92 70%, #1a237e 100%)', glow: 'rgba(106,27,154,0.5)', shadow: '#6a1b9a' },
+];
+
+function randomOrbStyle() {
+  return ORB_STYLES[Math.floor(Math.random() * ORB_STYLES.length)];
+}
+
+function saveIdeas() {
+  localStorage.setItem('idae-ideas', JSON.stringify(ideas));
+}
+
+// ─── STARS ──────────────────────────────────────
+function createStars(container, count, colors) {
+  for (let i = 0; i < count; i++) {
+    const star = document.createElement('div');
+    const size = Math.random() * 3 + 1;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const isBig = Math.random() < 0.15;
+
+    star.style.cssText = `
+      position: absolute;
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      width: ${isBig ? size * 3 : size}px;
+      height: ${isBig ? size * 3 : size}px;
+      background: ${color};
+      border-radius: 50%;
+      --dur: ${2 + Math.random() * 4}s;
+      --delay: ${Math.random() * 4}s;
+      --min-op: ${0.1 + Math.random() * 0.3};
+      box-shadow: 0 0 ${isBig ? 8 : 3}px ${color};
+    `;
+    star.className = 'star-particle';
+    container.appendChild(star);
+
+    if (isBig) {
+      // Make it a 4-point star shape
+      star.style.borderRadius = '0';
+      star.style.transform = 'rotate(45deg)';
+      star.style.background = 'transparent';
+      star.style.border = `1px solid ${color}`;
+      star.style.boxShadow = `0 0 6px ${color}`;
+    }
+  }
+}
+
+// Landing page stars
+createStars(document.getElementById('landing-bg'), 80,
+  ['#f9a8d4', '#67e8f9', '#fde68a', '#c4b5fd', '#ffffff', '#fb7185']);
+
+// Landing neon stars (bigger, colourful 4-pointers)
+const landingBg = document.getElementById('landing-bg');
+['#f472b6','#67e8f9','#fde68a','#a78bfa','#fb923c','#34d399'].forEach((color, i) => {
+  for (let j = 0; j < 3; j++) {
+    const s = document.createElement('div');
+    const size = 6 + Math.random() * 14;
+    s.style.cssText = `
+      position: absolute;
+      left: ${10 + Math.random() * 80}%;
+      top: ${5 + Math.random() * 90}%;
+      font-size: ${size}px;
+      color: ${color};
+      text-shadow: 0 0 ${size}px ${color}, 0 0 ${size*2}px ${color}50;
+      --dur: ${2+Math.random()*3}s;
+      --delay: ${Math.random()*3}s;
+      --min-op: 0.2;
+    `;
+    s.className = 'star-particle';
+    s.textContent = '✦';
+    landingBg.appendChild(s);
+  }
+});
+
+createStars(document.getElementById('archive-bg-stars'), 60,
+  ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
+createStars(document.getElementById('detail-bg-stars'), 50,
+  ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
+
+// Input nebula
+const inputNebula = document.getElementById('input-nebula');
+[
+  { color: '#7c3aed', w: 300, h: 300, l: 10, t: 20, dx: 30, dy: -20, nd: 9 },
+  { color: '#be185d', w: 250, h: 250, l: 60, t: 60, dx: -20, dy: 30, nd: 11, ndelay: 2 },
+  { color: '#1d4ed8', w: 200, h: 200, l: 30, t: 50, dx: 15, dy: 15, nd: 7, ndelay: 1 },
+].forEach(c => {
+  const el = document.createElement('div');
+  el.className = 'nebula-orb';
+  el.style.cssText = `background:${c.color}; width:${c.w}px; height:${c.h}px; left:${c.l}%; top:${c.t}%; --dx:${c.dx}px; --dy:${c.dy}px; --nd:${c.nd}s; --ndelay:${c.ndelay||0}s;`;
+  inputNebula.appendChild(el);
+});
+
+// ─── SCREEN NAVIGATION ───────────────────────────
+const screens = {
+  landing: document.getElementById('screen-landing'),
+  archive: document.getElementById('screen-archive'),
+  input: document.getElementById('screen-input'),
+  detail: document.getElementById('screen-detail'),
+};
+
+function showScreen(name, animate) {
+  Object.entries(screens).forEach(([k, el]) => {
+    if (k === name) el.classList.remove('hidden');
+    else el.classList.add('hidden');
+  });
+}
+
+// ─── TRANSITION: Landing → Archive ───────────────
+document.getElementById('start-btn').addEventListener('click', () => {
+  const overlay = document.getElementById('transition-overlay');
+  const starsContainer = document.getElementById('transition-stars');
+  starsContainer.innerHTML = '';
+
+  // Generate explosion of neon stars
+  const colors = ['#f472b6','#67e8f9','#fde68a','#a78bfa','#fb923c','#34d399','#f87171','#60a5fa'];
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = 8 + Math.random() * 20;
+    const angle = Math.random() * 360;
+    const dist = 30 + Math.random() * 70;
+    const x = 50 + Math.cos(angle * Math.PI / 180) * dist;
+    const y = 50 + Math.sin(angle * Math.PI / 180) * dist;
+    star.style.cssText = `
+      position:absolute; font-size:${size}px; color:${color};
+      text-shadow: 0 0 ${size}px ${color};
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: left ${0.6+Math.random()*0.6}s cubic-bezier(0.2,0,0.8,1),
+                  top ${0.6+Math.random()*0.6}s cubic-bezier(0.2,0,0.8,1),
+                  opacity 0.3s ease,
+                  transform ${0.6+Math.random()*0.4}s ease;
+    `;
+    star.textContent = Math.random() < 0.5 ? '✦' : '✧';
+    starsContainer.appendChild(star);
+
+    setTimeout(() => {
+      star.style.left = x + '%';
+      star.style.top = y + '%';
+      star.style.opacity = '1';
+      star.style.transform = `translate(-50%,-50%) rotate(${Math.random()*360}deg) scale(${0.5+Math.random()})`;
+    }, 20 + i * 10);
+
+    setTimeout(() => { star.style.opacity = '0'; }, 600);
+  }
+
+  overlay.style.transition = 'opacity 0.3s ease';
+  overlay.style.opacity = '0.8';
+  setTimeout(() => {
+    showScreen('archive');
+    renderOrbs();
+    overlay.style.opacity = '0';
+    starsContainer.innerHTML = '';
+  }, 900);
+});
+
+// ─── RENDER ORBS ────────────────────────────────
+function renderOrbs() {
+  const field = document.getElementById('orb-field');
+  const emptyState = document.getElementById('empty-state');
+  // Clear existing orbs (keep empty state)
+  Array.from(field.children).forEach(c => {
+    if (!c.classList.contains('empty-state')) c.remove();
+  });
+
+  if (ideas.length === 0) {
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  // Sort: newest last (bottom)
+  const sorted = [...ideas].sort((a, b) => a.createdAt - b.createdAt);
+
+  sorted.forEach((idea, idx) => {
+    const orb = document.createElement('div');
+    orb.className = 'orb-item';
+    orb.dataset.id = idea.id;
+    const floatDur = 5 + Math.random() * 4;
+    const floatDelay = Math.random() * 3;
+    orb.style.setProperty('--float-dur', floatDur + 's');
+    orb.style.setProperty('--float-delay', floatDelay + 's');
+    orb.style.setProperty('--glow-color', idea.orbStyle.glow);
+
+    // Horizontal stagger
+    const offsets = ['-20%', '10%', '-5%', '20%', '-15%'];
+    orb.style.marginLeft = offsets[idx % offsets.length];
+
+    const glowDiv = document.createElement('div');
+    glowDiv.className = 'orb-glow';
+
+    const orbVis = document.createElement('div');
+    orbVis.style.cssText = `
+      width: 100%; height: 100%; border-radius: 50%;
+      background: ${idea.orbStyle.bg};
+      box-shadow: 0 0 30px ${idea.orbStyle.glow}, 0 0 60px ${idea.orbStyle.glow}55;
+    `;
+
+    orb.appendChild(glowDiv);
+    orb.appendChild(orbVis);
+
+    orb.addEventListener('click', () => openDetail(idea.id));
+    field.insertBefore(orb, field.firstChild);
+  });
+
+  // Scroll to bottom (newest)
+  const space = document.getElementById('orb-space');
+  setTimeout(() => { space.scrollTop = space.scrollHeight; }, 100);
+}
+
+// ─── ADD IDEA ────────────────────────────────────
+document.getElementById('add-btn').addEventListener('click', () => {
+  document.getElementById('idea-textarea').value = '';
+  document.getElementById('similar-ideas').innerHTML = '';
+  showScreen('input');
+});
+
+document.getElementById('input-back-btn').addEventListener('click', () => {
+  showScreen('archive');
+  renderOrbs();
+});
+
+// Similar ideas on pause
+let similarTimer = null;
+document.getElementById('idea-textarea').addEventListener('input', () => {
+  clearTimeout(similarTimer);
+  similarTimer = setTimeout(() => {
+    showSimilarIdeas(document.getElementById('idea-textarea').value);
+  }, 1000);
+});
+
+function showSimilarIdeas(text) {
+  const container = document.getElementById('similar-ideas');
+  container.innerHTML = '';
+  if (!text.trim() || ideas.length === 0) return;
+
+  const words = text.toLowerCase().split(/\s+/);
+  const matches = ideas.filter(idea => {
+    const ideaWords = idea.text.toLowerCase().split(/\s+/);
+    return words.some(w => w.length > 2 && ideaWords.some(iw => iw.includes(w) || w.includes(iw)));
+  }).slice(0, 3);
+
+  matches.forEach((idea, i) => {
+    const el = document.createElement('div');
+    el.className = 'similar-orb';
+    el.style.animationDelay = (i * 0.5) + 's';
+
+    const orbEl = document.createElement('div');
+    orbEl.style.cssText = `
+      width:44px; height:44px; border-radius:50%;
+      background:${idea.orbStyle.bg};
+      box-shadow: 0 0 15px ${idea.orbStyle.glow};
+      flex-shrink:0;
+    `;
+
+    const label = document.createElement('div');
+    label.className = 'similar-label';
+    label.textContent = idea.text.substring(0, 40) + (idea.text.length > 40 ? '...' : '');
+
+    el.appendChild(orbEl);
+    el.appendChild(label);
+    el.addEventListener('click', () => openDetail(idea.id));
+    container.appendChild(el);
+
+    setTimeout(() => el.classList.add('visible'), 50 * i);
+  });
+}
+
+// ─── FINISH: Save idea ────────────────────────────
+document.getElementById('finish-btn').addEventListener('click', () => {
+  const text = document.getElementById('idea-textarea').value.trim();
+  if (!text) return;
+
+  const idea = {
+    id: Date.now(),
+    text,
+    createdAt: Date.now(),
+    orbStyle: randomOrbStyle(),
+  };
+  ideas.push(idea);
+  saveIdeas();
+
+  // Launch animation
+  launchOrb(idea);
+});
+
+function launchOrb(idea) {
+  const btn = document.getElementById('finish-btn');
+  const rect = btn.getBoundingClientRect();
+
+  const orb = document.createElement('div');
+  orb.className = 'launch-orb';
+  const size = 80;
+  orb.style.cssText = `
+    width: ${size}px; height: ${size}px;
+    background: ${idea.orbStyle.bg};
+    box-shadow: 0 0 40px ${idea.orbStyle.glow}, 0 0 80px ${idea.orbStyle.glow};
+    left: ${rect.left + rect.width/2 - size/2}px;
+    top: ${rect.top + rect.height/2 - size/2}px;
+    opacity: 1;
+    transition: top 1.2s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 0.4s ease 0.9s, transform 1.2s ease;
+    transform: scale(1);
+  `;
+  document.body.appendChild(orb);
+
+  setTimeout(() => {
+    orb.style.top = '-100px';
+    orb.style.opacity = '0';
+    orb.style.transform = 'scale(0.5)';
+  }, 50);
+
+  setTimeout(() => {
+    orb.remove();
+    showScreen('archive');
+    renderOrbs();
+    showNotif('✦ 아이디어가 저장됐어요');
+  }, 1300);
+}
+
+// ─── DETAIL ────────────────────────────────────
+function openDetail(id) {
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  currentDetailId = id;
+  isEditing = false;
+
+  document.getElementById('detail-orb-img').style.cssText = `
+    width:100%; height:100%; border-radius:50%; display:block;
+    background:${idea.orbStyle.bg};
+    box-shadow: 0 0 40px ${idea.orbStyle.glow};
+  `;
+  document.getElementById('detail-orb-img').src = '';
+  document.getElementById('detail-orb-glow').style.background =
+    `radial-gradient(circle, ${idea.orbStyle.glow} 0%, transparent 70%)`;
+  document.getElementById('detail-date').textContent =
+    new Date(idea.createdAt).toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('detail-text').textContent = idea.text;
+  document.getElementById('detail-text').style.display = 'block';
+  document.getElementById('detail-edit-area').style.display = 'none';
+  document.getElementById('detail-edit-area').value = idea.text;
+  document.querySelector('.edit-btn').textContent = 'edit';
+  document.querySelector('.save-btn').style.display = 'none';
+  document.querySelector('.edit-btn').style.display = '';
+
+  showScreen('detail');
+}
+
+document.getElementById('detail-back-btn').addEventListener('click', () => {
+  showScreen('archive');
+  renderOrbs();
+});
+
+document.getElementById('edit-btn').addEventListener('click', () => {
+  if (!isEditing) {
+    isEditing = true;
+    document.getElementById('detail-text').style.display = 'none';
+    const ea = document.getElementById('detail-edit-area');
+    ea.style.display = 'block';
+    ea.focus();
+    document.querySelector('.save-btn').style.display = '';
+    document.querySelector('.edit-btn').style.display = 'none';
+  }
+});
+
+document.getElementById('save-btn').addEventListener('click', () => {
+  const newText = document.getElementById('detail-edit-area').value.trim();
+  if (!newText) return;
+  const idx = ideas.findIndex(i => i.id === currentDetailId);
+  if (idx === -1) return;
+  ideas[idx].text = newText;
+  saveIdeas();
+  document.getElementById('detail-text').textContent = newText;
+  document.getElementById('detail-text').style.display = 'block';
+  document.getElementById('detail-edit-area').style.display = 'none';
+  document.querySelector('.save-btn').style.display = 'none';
+  document.querySelector('.edit-btn').style.display = '';
+  isEditing = false;
+  showNotif('✦ 수정됐어요');
+});
+
+document.getElementById('delete-btn').addEventListener('click', () => {
+  if (!confirm('이 아이디어를 삭제할까요?')) return;
+  ideas = ideas.filter(i => i.id !== currentDetailId);
+  saveIdeas();
+  showScreen('archive');
+  renderOrbs();
+  showNotif('✦ 삭제됐어요');
+});
+
+// ─── NOTIFICATION ────────────────────────────────
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2500);
+}
+
+// ─── DETAIL ORB: use div instead of img ──────────
+// Fix: detail hero orb is a div with gradient
+document.getElementById('detail-orb-hero').innerHTML = `
+  <div class="detail-orb-glow" id="detail-orb-glow"></div>
+  <div id="detail-orb-vis" style="width:100%;height:100%;border-radius:50%;"></div>
+`;
+
+function openDetailFixed(id) {
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  currentDetailId = id;
+  isEditing = false;
+
+  document.getElementById('detail-orb-vis').style.cssText = `
+    width:100%; height:100%; border-radius:50%;
+    background:${idea.orbStyle.bg};
+    box-shadow: 0 0 40px ${idea.orbStyle.glow};
+  `;
+  document.getElementById('detail-orb-glow').style.background =
+    `radial-gradient(circle, ${idea.orbStyle.glow} 0%, transparent 70%)`;
+  document.getElementById('detail-date').textContent =
+    new Date(idea.createdAt).toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('detail-text').textContent = idea.text;
+  document.getElementById('detail-text').style.display = 'block';
+  document.getElementById('detail-edit-area').style.display = 'none';
+  document.getElementById('detail-edit-area').value = idea.text;
+  document.querySelector('.save-btn').style.display = 'none';
+  document.querySelector('.edit-btn').style.display = '';
+
+  showScreen('detail');
+}
+
+// Override old openDetail
+window.openDetail = openDetailFixed;
+</script>
+</body>
+</html>
