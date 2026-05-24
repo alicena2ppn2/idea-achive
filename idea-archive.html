@@ -343,7 +343,7 @@
      SCREEN 3 — INPUT
   ══════════════════════════════ */
   #screen-input {
-    background: radial-gradient(ellipse at 30% 40%, #1a0a2e 0%, #050810 50%, #020208 100%);
+    background: radial-gradient(ellipse at 50% 100%, #0d1f3c 0%, #050810 50%, #020305 100%);
     flex-direction: column;
     gap: 0;
     overflow: hidden;
@@ -379,8 +379,8 @@
   .input-title {
     font-family: 'Great Vibes', cursive;
     font-size: 1.5rem;
-    color: rgba(252,228,236,0.7);
-    text-shadow: 0 0 20px rgba(167,139,250,0.5);
+    color: rgba(252,228,236,0.65);
+    text-shadow: 0 0 20px rgba(167,139,250,0.4);
   }
 
   /* Nebula background particles for input */
@@ -416,35 +416,42 @@
   }
 
   .input-prompt {
-    font-size: 0.85rem;
-    letter-spacing: 0.2em;
-    color: rgba(167,139,250,0.7);
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    color: rgba(200,185,255,0.75);
     text-transform: uppercase;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
   }
 
   .idea-textarea {
     width: 100%;
-    min-height: 180px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(167,139,250,0.3);
-    border-radius: 16px;
-    padding: 24px;
-    color: rgba(255,255,255,0.9);
+    height: 56px;
+    min-height: unset;
+    background: rgba(13, 31, 60, 0.55);
+    border: 1px solid rgba(103, 232, 249, 0.15);
+    border-radius: 999px;
+    padding: 0 28px;
+    color: rgba(235, 245, 255, 0.92);
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem;
-    line-height: 1.7;
+    font-size: 1.2rem;
+    font-style: italic;
+    line-height: 56px;
     resize: none;
     outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    caret-color: var(--purple);
+    overflow: hidden;
+    transition: border-color 0.4s, box-shadow 0.4s, background 0.4s;
+    caret-color: rgba(103, 232, 249, 0.9);
+    box-shadow: 0 2px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(103,232,249,0.06);
   }
   .idea-textarea::placeholder {
     color: rgba(167,139,250,0.3);
     font-style: italic;
   }
   .idea-textarea:focus {
-    border-color: rgba(167,139,250,0.7);
-    box-shadow: 0 0 40px rgba(167,139,250,0.1), inset 0 0 20px rgba(167,139,250,0.03);
+    border-color: rgba(103, 232, 249, 0.3);
+    background: rgba(13, 31, 60, 0.7);
+    box-shadow: 0 0 50px rgba(103,232,249,0.07), 0 0 20px rgba(167,139,250,0.06), 0 2px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(103,232,249,0.1);
   }
 
   /* Similar ideas that float nearby */
@@ -499,31 +506,31 @@
   .finish-btn {
     position: relative;
     background: transparent;
-    border: 1.5px solid rgba(167,139,250,0.7);
+    border: 1px solid rgba(103,232,249,0.25);
     border-radius: 30px;
-    padding: 14px 52px;
-    color: rgba(232,222,255,0.95);
+    padding: 13px 52px;
+    color: rgba(220,240,255,0.85);
     font-family: 'Bodoni Moda', serif;
     font-style: italic;
     font-size: 1rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 0 0 30px rgba(167,139,250,0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(103,232,249,0.07);
+    transition: all 0.4s ease;
     overflow: hidden;
   }
   .finish-btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(244,114,182,0.1));
+    background: linear-gradient(135deg, rgba(103,232,249,0.07), rgba(167,139,250,0.07));
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.4s;
   }
   .finish-btn:hover {
-    box-shadow: 0 0 60px rgba(167,139,250,0.4), 0 0 100px rgba(167,139,250,0.2);
-    border-color: rgba(167,139,250,1);
+    box-shadow: 0 0 60px rgba(103,232,249,0.2), 0 0 100px rgba(167,139,250,0.1);
+    border-color: rgba(103,232,249,0.5);
     transform: translateY(-2px);
   }
   .finish-btn:hover::before { opacity: 1; }
@@ -758,6 +765,7 @@
 <!-- ══ SCREEN 3: INPUT ══ -->
 <div class="screen hidden" id="screen-input">
   <div class="input-nebula" id="input-nebula"></div>
+  <div class="bg-stars" id="input-bg-stars"></div>
 
   <div class="input-header">
     <button class="back-btn" id="input-back-btn">← back</button>
@@ -768,7 +776,7 @@
   <div class="input-center" style="position:relative;">
     <div class="input-prompt">what's on your mind?</div>
     <div style="position:relative; width:100%;">
-      <textarea class="idea-textarea" id="idea-textarea" placeholder="아이디어를 자유롭게 적어보세요..."></textarea>
+      <textarea class="idea-textarea" id="idea-textarea" placeholder="아이디어를 자유롭게 적어보세요..." rows="1"></textarea>
       <div class="similar-ideas" id="similar-ideas"></div>
     </div>
     <button class="finish-btn" id="finish-btn">Finish</button>
@@ -948,13 +956,17 @@ createStars(document.getElementById('archive-bg-stars'), 60,
   ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
 createStars(document.getElementById('detail-bg-stars'), 50,
   ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
+createStars(document.getElementById('input-bg-stars'), 60,
+  ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
 
 // Input nebula
 const inputNebula = document.getElementById('input-nebula');
 [
-  { color: '#7c3aed', w: 300, h: 300, l: 10, t: 20, dx: 30, dy: -20, nd: 9 },
-  { color: '#be185d', w: 250, h: 250, l: 60, t: 60, dx: -20, dy: 30, nd: 11, ndelay: 2 },
-  { color: '#1d4ed8', w: 200, h: 200, l: 30, t: 50, dx: 15, dy: 15, nd: 7, ndelay: 1 },
+  { color: '#0d1f3c', w: 500, h: 400, l: -10, t: 50, dx: 20, dy: -10, nd: 12 },
+  { color: '#1e3a5f', w: 320, h: 320, l: 55, t: 40, dx: -15, dy: 20, nd: 14, ndelay: 2 },
+  { color: '#a78bfa', w: 200, h: 180, l: 10, t: 15, dx: 10, dy: 15, nd: 9, ndelay: 1 },
+  { color: '#67e8f9', w: 150, h: 150, l: 70, t: 10, dx: -10, dy: 20, nd: 11, ndelay: 3 },
+  { color: '#f9a8d4', w: 160, h: 130, l: 40, t: 70, dx: 15, dy: -15, nd: 10, ndelay: 1.5 },
 ].forEach(c => {
   const el = document.createElement('div');
   el.className = 'nebula-orb';
