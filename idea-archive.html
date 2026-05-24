@@ -1029,6 +1029,25 @@ document.getElementById('start-btn').addEventListener('click', () => {
   overlay.style.opacity = '0.8';
   setTimeout(() => {
     showScreen('archive');
+    // ↓ 여기에 추가
+    let count = 0;
+    const spawnInterval = setInterval(() => {
+      const colors = ['#f472b6','#67e8f9','#fde68a','#a78bfa','#fb923c','#34d399'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const size = 3 + Math.random() * 8;
+      createStar8(
+        document.getElementById('archive-bg-stars'),
+        Math.random() * 100,
+        Math.random() * 100,
+        size, color,
+        2 + Math.random() * 4,
+        0,
+        0.2 + Math.random() * 0.4
+      );
+      count++;
+      if (count >= 30) clearInterval(spawnInterval);
+    }, 80);
+    // ↑ 여기까지
     renderOrbs();
     overlay.style.opacity = '0';
     starsContainer.innerHTML = '';
