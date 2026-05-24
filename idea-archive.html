@@ -909,7 +909,7 @@ function createStars(container, count, colors) {
   for (let i = 0; i < count; i++) {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const isBig = Math.random() < 0.18;
-    const size = isBig ? (4 + Math.random() * 5) : (2 + Math.random() * 3);
+    const size = isBig ? (3 + Math.random() * 4) : (2 + Math.random() * 3);
     createStar8(
       container,
       Math.random() * 100,
