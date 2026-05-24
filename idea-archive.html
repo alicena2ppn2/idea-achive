@@ -895,8 +895,8 @@ function createStar8(container, x, y, size, color, dur, delay, minOp) {
     svg.style.transition = 'filter 0.12s ease, transform 0.12s ease, opacity 0.12s ease';
   });
   svg.addEventListener('mouseleave', () => {
-    svg.style.transform = 'translate(-50%, -50%) scale(1)';
-    svg.style.filter = `drop-shadow(0 0 ${size * 0.7}px ${color})`;
+   svg.style.transform = `translate(-50%, -50%)`;
+   svg.style.filter = `drop-shadow(0 0 ${size*3}px ${color}) drop-shadow(0 0 ${size*6}px ${color}) drop-shadow(0 0 ${size*2}px #fff)`;
     svg.style.transition = 'filter 0.3s ease, transform 0.3s ease, opacity 0.3s ease';
     // Re-enable twinkle animation after transition
     setTimeout(() => { svg.style.animation = ''; svg.style.opacity = ''; }, 300);
