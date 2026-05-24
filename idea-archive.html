@@ -693,24 +693,27 @@
 
   <div style="position:relative; z-index:5; display:flex; flex-direction:column; align-items:center;">
     <div class="starburst">
-<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;animation:pulse-star 4s ease-in-out infinite;">
-  <defs>
-    <radialGradient id="sg1" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
-      <stop offset="20%" stop-color="#f9a8d4" stop-opacity="0.9"/>
-      <stop offset="60%" stop-color="#f472b6" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#be185d" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="glow-filter">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-  <ellipse cx="170" cy="170" rx="80" ry="80" fill="url(#sg1)" opacity="0.6"/>
-  <path d="M 170,30 C 173,168 175,169 310,170 C 175,171 173,172 170,310 C 167,172 165,171 30,170 C 165,169 167,168 170,30 Z"
-        fill="url(#sg1)" filter="url(#glow-filter)"/>
-  <circle cx="170" cy="170" r="18" fill="white" opacity="0.95" filter="url(#glow-filter)"/>
-</svg>
+      <svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;animation:pulse-star 4s ease-in-out infinite;">
+        <defs>
+          <radialGradient id="sg1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
+            <stop offset="30%" stop-color="#f9a8d4" stop-opacity="0.8"/>
+            <stop offset="70%" stop-color="#f472b6" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#be185d" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="glow-filter">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <ellipse cx="170" cy="170" rx="130" ry="130" fill="url(#sg1)" opacity="0.3"/>
+        <polygon points="170,10 178,168 170,330 162,168" fill="url(#sg1)" filter="url(#glow-filter)"/>
+        <polygon points="10,170 168,178 330,170 168,162" fill="url(#sg1)" filter="url(#glow-filter)"/>
+        <polygon points="50,50 166,166 60,280 154,170" fill="url(#sg1)" opacity="0.6" filter="url(#glow-filter)"/>
+        <polygon points="290,50 174,166 280,280 186,170" fill="url(#sg1)" opacity="0.6" filter="url(#glow-filter)"/>
+        <circle cx="170" cy="170" r="30" fill="white" opacity="0.7" filter="url(#glow-filter)"/>
+        <circle cx="170" cy="170" r="15" fill="white" opacity="0.9"/>
+      </svg>
       <div class="title-text">
         <h1>idea archive</h1>
       </div>
@@ -853,11 +856,11 @@ function saveIdeas() {
 // ─── STARS ──────────────────────────────────────
 // Chubby 4-point star path (like the reference image) — cubic bezier curves
 function chubbyStar4Path(r) {
-  const rH = r * 1.8; // 가로축을 1.8배 길게
-  const c = r * 0.04;
-  const t = r * 0.05;
-  return `M 0,${-r} C ${t},${-c} ${c},${-t} ${rH},0 C ${c},${t} ${t},${c} 0,${r} C ${-t},${c} ${-c},${t} ${-rH},0 C ${-c},${-t} ${-t},${-c} 0,${-r} Z`;
+  const c = r * 0.18;
+  const t = r * 0.22;
+  return `M 0,${-r} C ${t},${-c} ${c},${-t} ${r},0 C ${c},${t} ${t},${c} 0,${r} C ${-t},${c} ${-c},${t} ${-r},0 C ${-c},${-t} ${-t},${-c} 0,${-r} Z`;
 }
+
 function createStar8(container, x, y, size, color, dur, delay, minOp) {
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
@@ -871,7 +874,7 @@ function createStar8(container, x, y, size, color, dur, delay, minOp) {
     --dur: ${dur}s;
     --delay: ${delay}s;
     --min-op: ${minOp};
-    filter: drop-shadow(0 0 ${size * 1.5}px ${color});
+    filter: drop-shadow(0 0 ${size * 0.7}px ${color});
     overflow: visible;
     cursor: pointer;
     transition: filter 0.15s ease, transform 0.15s ease;
