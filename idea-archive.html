@@ -715,7 +715,7 @@
         <circle cx="170" cy="170" r="15" fill="white" opacity="0.9"/>
       </svg>
       <div class="title-text">
-        <h1>idae archive</h1>
+        <h1>idea archive</h1>
       </div>
     </div>
 
@@ -740,7 +740,7 @@
   <div class="bg-stars" id="archive-bg-stars"></div>
 
   <div class="archive-header">
-    <div class="archive-title">idae archive</div>
+    <div class="archive-title">idea archive</div>
     <button class="add-btn" id="add-btn" title="아이디어 추가">+</button>
   </div>
 
@@ -805,7 +805,7 @@
 
 <script>
 // ─── DATA ───────────────────────────────────────
-let ideas = JSON.parse(localStorage.getItem('idae-ideas') || '[]');
+let ideas = JSON.parse(localStorage.getItem('idea-ideas') || '[]');
 let currentDetailId = null;
 let isEditing = false;
 
@@ -850,7 +850,7 @@ function randomOrbStyle() {
 }
 
 function saveIdeas() {
-  localStorage.setItem('idae-ideas', JSON.stringify(ideas));
+  localStorage.setItem('idea-ideas', JSON.stringify(ideas));
 }
 
 // ─── STARS ──────────────────────────────────────
