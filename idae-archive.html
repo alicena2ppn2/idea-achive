@@ -4,8 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>idae archive</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Bodoni+Moda:ital,wght@1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+KR:wght@300&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/MaruBuri-Regular.woff" rel="stylesheet">
 <style>
+ @font-face {
+  font-family: 'MaruBuri';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/MaruBuri-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
@@ -27,14 +33,14 @@
     width: 100vw;
     cursor: default;
   }
-  /* Korean text — 마루부리 (Noto Serif KR Light) */
-  :lang(ko), .ko,
-  .empty-state, .input-prompt, .idea-textarea, .idea-textarea::placeholder,
-  .detail-text, .detail-edit-area, .detail-date, .similar-label,
-  .notif, .archive-title { 
-    font-family: 'Noto Serif KR', serif;
-    font-weight: 300;
-  }
+  /* Korean text — MaruBuri */
+:lang(ko), .ko,
+.empty-state, .input-prompt, .idea-textarea, .idea-textarea::placeholder,
+.detail-text, .detail-edit-area, .detail-date, .similar-label,
+.notif, .archive-title { 
+  font-family: 'MaruBuri', serif;
+  font-weight: 400;
+}
 
   /* ─── SCREENS ─── */
   .screen {
