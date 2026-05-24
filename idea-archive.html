@@ -856,8 +856,8 @@ function saveIdeas() {
 // ─── STARS ──────────────────────────────────────
 // Chubby 4-point star path (like the reference image) — cubic bezier curves
 function chubbyStar4Path(r) {
-  const c = r * 0.18;
-  const t = r * 0.22;
+  const c = r * 0.05;
+  const t = r * 0.06;
   return `M 0,${-r} C ${t},${-c} ${c},${-t} ${r},0 C ${c},${t} ${t},${c} 0,${r} C ${-t},${c} ${-c},${t} ${-r},0 C ${-c},${-t} ${-t},${-c} 0,${-r} Z`;
 }
 
