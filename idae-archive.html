@@ -554,10 +554,12 @@
     margin-bottom: 24px;
     animation: orb-float 6s ease-in-out infinite;
   }
-  .detail-orb-hero .orb-view {
+  .detail-orb-hero img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    object-fit: cover;
+    filter: brightness(1.1) saturate(1.2);
   }
   .detail-orb-glow {
     position: absolute;
@@ -685,6 +687,7 @@
 </head>
 <body>
 
+<!-- ══ SCREEN 1: LANDING ══ -->
 <div class="screen" id="screen-landing">
   <div class="landing-bg" id="landing-bg"></div>
 
@@ -727,10 +730,12 @@
   </div>
 </div>
 
+<!-- ══ TRANSITION OVERLAY ══ -->
 <div id="transition-overlay">
   <div class="transition-stars" id="transition-stars"></div>
 </div>
 
+<!-- ══ SCREEN 2: ARCHIVE ══ -->
 <div class="screen hidden" id="screen-archive">
   <div class="bg-stars" id="archive-bg-stars"></div>
 
@@ -750,6 +755,7 @@
   </div>
 </div>
 
+<!-- ══ SCREEN 3: INPUT ══ -->
 <div class="screen hidden" id="screen-input">
   <div class="input-nebula" id="input-nebula"></div>
 
@@ -769,6 +775,7 @@
   </div>
 </div>
 
+<!-- ══ SCREEN 4: DETAIL ══ -->
 <div class="screen hidden" id="screen-detail">
   <div class="bg-stars" id="detail-bg-stars"></div>
 
@@ -780,7 +787,7 @@
   <div class="detail-content">
     <div class="detail-orb-hero" id="detail-orb-hero">
       <div class="detail-orb-glow" id="detail-orb-glow"></div>
-      <div id="detail-orb-view" class="orb-view"></div>
+      <img id="detail-orb-img" src="" alt="">
     </div>
     <div class="detail-date" id="detail-date"></div>
     <div class="detail-text" id="detail-text"></div>
@@ -793,6 +800,7 @@
   </div>
 </div>
 
+<!-- Notification -->
 <div class="notif" id="notif"></div>
 
 <script>
@@ -801,18 +809,40 @@ let ideas = JSON.parse(localStorage.getItem('idae-ideas') || '[]');
 let currentDetailId = null;
 let isEditing = false;
 
-// 🎨 이미지의 크레파스/초크 질감을 품은 입체적인 구체 스타일링 데이터맵
+// Orb image sets from the 3 uploaded reference images
+// We'll use CSS-generated orbs since we can't embed the actual images at this scale
+// Using beautiful CSS radial gradients inspired by the uploaded orb images
 const ORB_STYLES = [
+  // Thoughts — lavender/blue/gold
   { bg: 'radial-gradient(circle at 40% 35%, #fff8e1 0%, #e8d5f5 20%, #b39ddb 45%, #7986cb 70%, #5c6bc0 100%)', glow: 'rgba(121,134,203,0.5)', shadow: '#7986cb' },
+  // Fearless — warm orange/red/gold
   { bg: 'radial-gradient(circle at 50% 45%, #fff9c4 0%, #ffcc80 20%, #ff8a65 45%, #e53935 70%, #b71c1c 100%)', glow: 'rgba(229,57,53,0.5)', shadow: '#e53935' },
+  // Selfless — rainbow kaleidoscope
   { bg: 'radial-gradient(circle at 50% 50%, #e1f5fe 0%, #81d4fa 20%, #4dd0e1 35%, #a5d6a7 50%, #c5e1a5 65%, #ce93d8 80%, #9c8dda 100%)', glow: 'rgba(77,208,225,0.5)', shadow: '#4dd0e1' },
+  // Focused Energy — pink/yellow orb
   { bg: 'radial-gradient(circle at 45% 40%, #fff9c4 0%, #ffcc02 15%, #ff6d8b 40%, #e91e8c 65%, #c2185b 100%)', glow: 'rgba(233,30,140,0.5)', shadow: '#e91e8c' },
+  // Soul — white nebula
   { bg: 'radial-gradient(circle at 50% 45%, #ffffff 0%, #e3f2fd 15%, #b3e5fc 30%, #c8e6c9 50%, #f8bbd0 70%, #ede7f6 90%, #b0bec5 100%)', glow: 'rgba(179,229,252,0.6)', shadow: '#b3e5fc' },
+  // Protective Energy — concentric pink/blue/teal
   { bg: 'radial-gradient(circle at 50% 50%, #ff4081 0%, #f06292 15%, #4dd0e1 30%, #80cbc4 45%, #ef9a9a 60%, #ff8a65 75%, #ffcc80 100%)', glow: 'rgba(255,64,129,0.4)', shadow: '#ff4081' },
+  // Euphoric — hot pink blob
   { bg: 'radial-gradient(ellipse at 40% 45%, #fce4ec 0%, #f48fb1 20%, #e91e63 50%, #c2185b 80%, #880e4f 100%)', glow: 'rgba(233,30,99,0.6)', shadow: '#e91e63' },
+  // Hope — blue/white orb
   { bg: 'radial-gradient(circle at 45% 40%, #ffffff 0%, #e3f2fd 15%, #81d4fa 35%, #29b6f6 60%, #0288d1 85%, #01579b 100%)', glow: 'rgba(41,182,246,0.5)', shadow: '#29b6f6' },
+  // Connectivity — double orb iridescent
   { bg: 'radial-gradient(circle at 35% 45%, #f5f5f5 0%, #e8eaf6 15%, #c5cae9 30%, #b2dfdb 50%, #e0f2f1 65%, #fce4ec 80%, #e8eaf6 100%)', glow: 'rgba(197,202,233,0.5)', shadow: '#c5cae9' },
-  { bg: 'radial-gradient(ellipse at 40% 35%, #ffffff 0%, #e1f5fe 15%, #81d4fa 30%, #ce93d8 55%, #ab47bc 75%, #7b1fa2 100%)', glow: 'rgba(206,147,216,0.5)', shadow: '#ce93d8' }
+  // Inspired — blue sparkles
+  { bg: 'radial-gradient(ellipse at 40% 35%, #ffffff 0%, #e1f5fe 15%, #81d4fa 30%, #ce93d8 55%, #ab47bc 75%, #7b1fa2 100%)', glow: 'rgba(206,147,216,0.5)', shadow: '#ce93d8' },
+  // Love — deep red/crimson
+  { bg: 'radial-gradient(ellipse at 50% 45%, #ffcdd2 0%, #ef9a9a 20%, #c62828 50%, #7f0000 80%, #4a0000 100%)', glow: 'rgba(198,40,40,0.5)', shadow: '#c62828' },
+  // Grief — dark blue/teal rings
+  { bg: 'radial-gradient(circle at 50% 50%, #263238 0%, #37474f 15%, #4dd0e1 30%, #1a237e 50%, #283593 65%, #1565c0 80%, #0d47a1 100%)', glow: 'rgba(77,208,225,0.4)', shadow: '#4dd0e1' },
+  // Growth — red starburst
+  { bg: 'radial-gradient(circle at 45% 40%, #ffffff 0%, #ffcdd2 15%, #ef5350 35%, #c62828 60%, #b71c1c 100%)', glow: 'rgba(239,83,80,0.5)', shadow: '#ef5350' },
+  // Joy — white sparkle burst
+  { bg: 'radial-gradient(circle at 50% 50%, #ffffff 0%, #fff9c4 15%, #fff176 25%, #e8f5e9 40%, #e3f2fd 55%, #fce4ec 70%, #ede7f6 85%, #f5f5f5 100%)', glow: 'rgba(255,255,255,0.6)', shadow: '#ffffff' },
+  // Overwhelmed — dark purple/maroon
+  { bg: 'radial-gradient(ellipse at 45% 50%, #4a148c 0%, #6a1b9a 20%, #880e4f 45%, #311b92 70%, #1a237e 100%)', glow: 'rgba(106,27,154,0.5)', shadow: '#6a1b9a' },
 ];
 
 function randomOrbStyle() {
@@ -823,7 +853,8 @@ function saveIdeas() {
   localStorage.setItem('idae-ideas', JSON.stringify(ideas));
 }
 
-// ─── STARS (Chubby 4-point star path) ───────────
+// ─── STARS ──────────────────────────────────────
+// Chubby 4-point star path (like the reference image) — cubic bezier curves
 function chubbyStar4Path(r) {
   const c = r * 0.18;
   const t = r * 0.22;
@@ -835,12 +866,19 @@ function createStar8(container, x, y, size, color, dur, delay, minOp) {
   const svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('viewBox', `-${size} -${size} ${size*2} ${size*2}`);
   svg.style.cssText = `
-    position: absolute; left: ${x}%; top: ${y}%;
-    width: ${size * 2}px; height: ${size * 2}px;
+    position: absolute;
+    left: ${x}%;
+    top: ${y}%;
+    width: ${size * 2}px;
+    height: ${size * 2}px;
     transform: translate(-50%, -50%);
-    --dur: ${dur}s; --delay: ${delay}s; --min-op: ${minOp};
+    --dur: ${dur}s;
+    --delay: ${delay}s;
+    --min-op: ${minOp};
     filter: drop-shadow(0 0 ${size * 0.7}px ${color});
     overflow: visible;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.15s ease;
   `;
   svg.className = 'star-particle';
   const path = document.createElementNS(ns, 'path');
@@ -848,6 +886,23 @@ function createStar8(container, x, y, size, color, dur, delay, minOp) {
   path.setAttribute('fill', color);
   svg.appendChild(path);
   container.appendChild(svg);
+
+  // Hover: burst of neon glow
+  svg.addEventListener('mouseenter', () => {
+    svg.style.animation = 'none';
+    svg.style.opacity = '1';
+    svg.style.transform = `translate(-50%, -50%) scale(${1.6 + size * 0.04})`;
+    svg.style.filter = `drop-shadow(0 0 ${size*2}px ${color}) drop-shadow(0 0 ${size*4}px ${color}) drop-shadow(0 0 ${size*1.5}px #fff)`;
+    svg.style.transition = 'filter 0.12s ease, transform 0.12s ease, opacity 0.12s ease';
+  });
+  svg.addEventListener('mouseleave', () => {
+    svg.style.transform = 'translate(-50%, -50%) scale(1)';
+    svg.style.filter = `drop-shadow(0 0 ${size * 0.7}px ${color})`;
+    svg.style.transition = 'filter 0.3s ease, transform 0.3s ease, opacity 0.3s ease';
+    // Re-enable twinkle animation after transition
+    setTimeout(() => { svg.style.animation = ''; svg.style.opacity = ''; }, 300);
+  });
+
   return svg;
 }
 
@@ -856,16 +911,47 @@ function createStars(container, count, colors) {
     const color = colors[Math.floor(Math.random() * colors.length)];
     const isBig = Math.random() < 0.18;
     const size = isBig ? (6 + Math.random() * 10) : (2 + Math.random() * 4);
-    createStar8(container, Math.random() * 100, Math.random() * 100, size, color, 2 + Math.random() * 4, Math.random() * 4, 0.15 + Math.random() * 0.3);
+    createStar8(
+      container,
+      Math.random() * 100,
+      Math.random() * 100,
+      size,
+      color,
+      2 + Math.random() * 4,
+      Math.random() * 4,
+      0.15 + Math.random() * 0.3
+    );
   }
 }
 
-// 초기 별들 생성
-createStars(document.getElementById('landing-bg'), 80, ['#f9a8d4', '#67e8f9', '#fde68a', '#c4b5fd', '#ffffff', '#fb7185']);
-createStars(document.getElementById('archive-bg-stars'), 60, ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
-createStars(document.getElementById('detail-bg-stars'), 50, ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
+// Landing page stars
+createStars(document.getElementById('landing-bg'), 80,
+  ['#f9a8d4', '#67e8f9', '#fde68a', '#c4b5fd', '#ffffff', '#fb7185']);
 
-// Input 화면용 백그라운드 성운 뿜어내기
+// Landing neon stars — bigger colourful chubby 4-point stars
+const landingBg = document.getElementById('landing-bg');
+['#f472b6','#67e8f9','#fde68a','#a78bfa','#fb923c','#34d399'].forEach((color) => {
+  for (let j = 0; j < 3; j++) {
+    const size = 8 + Math.random() * 16;
+    createStar8(
+      landingBg,
+      10 + Math.random() * 80,
+      5 + Math.random() * 90,
+      size,
+      color,
+      2 + Math.random() * 3,
+      Math.random() * 3,
+      0.25
+    );
+  }
+});
+
+createStars(document.getElementById('archive-bg-stars'), 60,
+  ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
+createStars(document.getElementById('detail-bg-stars'), 50,
+  ['#a78bfa', '#67e8f9', '#f9a8d4', '#ffffff']);
+
+// Input nebula
 const inputNebula = document.getElementById('input-nebula');
 [
   { color: '#7c3aed', w: 300, h: 300, l: 10, t: 20, dx: 30, dy: -20, nd: 9 },
@@ -886,19 +972,20 @@ const screens = {
   detail: document.getElementById('screen-detail'),
 };
 
-function showScreen(name) {
+function showScreen(name, animate) {
   Object.entries(screens).forEach(([k, el]) => {
     if (k === name) el.classList.remove('hidden');
     else el.classList.add('hidden');
   });
 }
 
-// ─── TRANSITION EFFECT (중요 마무리스크립트 포함) ───
+// ─── TRANSITION: Landing → Archive ───────────────
 document.getElementById('start-btn').addEventListener('click', () => {
   const overlay = document.getElementById('transition-overlay');
   const starsContainer = document.getElementById('transition-stars');
   starsContainer.innerHTML = '';
 
+  // Generate explosion of neon chubby 4-point stars
   const colors = ['#f472b6','#67e8f9','#fde68a','#a78bfa','#fb923c','#34d399','#f87171','#60a5fa'];
   for (let i = 0; i < 60; i++) {
     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -908,18 +995,24 @@ document.getElementById('start-btn').addEventListener('click', () => {
     const tx = 50 + Math.cos(angle * Math.PI / 180) * dist;
     const ty = 50 + Math.sin(angle * Math.PI / 180) * dist;
     const dur = 0.6 + Math.random() * 0.6;
-    
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
     svg.setAttribute('viewBox', `-${size} -${size} ${size*2} ${size*2}`);
     svg.style.cssText = `
       position:absolute; width:${size*2}px; height:${size*2}px;
-      left:50%; top:50%; transform:translate(-50%,-50%) rotate(${Math.random()*45}deg);
-      opacity:0; filter:drop-shadow(0 0 ${size*0.5}px ${color});
-      transition: left ${dur}s cubic-bezier(0.2,0,0.8,1), top ${dur}s cubic-bezier(0.2,0,0.8,1), opacity 0.3s ease, transform ${dur}s ease;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%) rotate(${Math.random()*45}deg);
+      opacity:0;
+      filter:drop-shadow(0 0 ${size*0.5}px ${color});
+      transition: left ${dur}s cubic-bezier(0.2,0,0.8,1),
+                  top ${dur}s cubic-bezier(0.2,0,0.8,1),
+                  opacity 0.3s ease,
+                  transform ${dur}s ease;
     `;
+    const r = size; const c = r*0.18, t = r*0.22;
+    const d = `M 0,${-r} C ${t},${-c} ${c},${-t} ${r},0 C ${c},${t} ${t},${c} 0,${r} C ${-t},${c} ${-c},${t} ${-r},0 C ${-c},${-t} ${-t},${-c} 0,${-r} Z`;
     const path = document.createElementNS(ns, 'path');
-    path.setAttribute('d', chubbyStar4Path(size));
+    path.setAttribute('d', d);
     path.setAttribute('fill', color);
     svg.appendChild(path);
     starsContainer.appendChild(svg);
@@ -930,234 +1023,295 @@ document.getElementById('start-btn').addEventListener('click', () => {
       svg.style.opacity = '1';
       svg.style.transform = `translate(-50%,-50%) rotate(${Math.random()*360}deg) scale(${0.5+Math.random()})`;
     }, 20 + i * 10);
+
+    setTimeout(() => { svg.style.opacity = '0'; }, 600);
   }
 
-  overlay.style.transition = 'opacity 0.4s ease';
-  overlay.style.opacity = '1';
-
+  overlay.style.transition = 'opacity 0.3s ease';
+  overlay.style.opacity = '0.8';
   setTimeout(() => {
     showScreen('archive');
-    renderArchive();
-  }, 800);
-
-  setTimeout(() => {
+    renderOrbs();
     overlay.style.opacity = '0';
-  }, 1100);
+    starsContainer.innerHTML = '';
+  }, 900);
 });
 
-// ─── ARCHIVE LOGIC ─────────────────────────────
-function showNotif(msg) {
-  const notif = document.getElementById('notif');
-  notif.textContent = msg;
-  notif.classList.add('show');
-  setTimeout(() => notif.classList.remove('show'), 2500);
-}
-
-function renderArchive() {
+// ─── RENDER ORBS ────────────────────────────────
+function renderOrbs() {
   const field = document.getElementById('orb-field');
   const emptyState = document.getElementById('empty-state');
-  
-  const items = field.querySelectorAll('.orb-item');
-  items.forEach(item => item.remove());
+  // Clear existing orbs (keep empty state)
+  Array.from(field.children).forEach(c => {
+    if (!c.classList.contains('empty-state')) c.remove();
+  });
 
   if (ideas.length === 0) {
     emptyState.style.display = 'block';
     return;
-  } else {
-    emptyState.style.display = 'none';
   }
+  emptyState.style.display = 'none';
 
-  ideas.forEach((idea) => {
+  // Sort: newest last (bottom)
+  const sorted = [...ideas].sort((a, b) => a.createdAt - b.createdAt);
+
+  sorted.forEach((idea, idx) => {
     const orb = document.createElement('div');
     orb.className = 'orb-item';
-    orb.style.setProperty('--float-dur', idea.style.floatDur || '6s');
-    orb.style.setProperty('--float-delay', idea.style.floatDelay || '0s');
+    orb.dataset.id = idea.id;
+    const floatDur = 5 + Math.random() * 4;
+    const floatDelay = Math.random() * 3;
+    orb.style.setProperty('--float-dur', floatDur + 's');
+    orb.style.setProperty('--float-delay', floatDelay + 's');
+    orb.style.setProperty('--glow-color', idea.orbStyle.glow);
 
-    const glow = document.createElement('div');
-    glow.className = 'orb-glow';
-    glow.style.setProperty('--glow-color', idea.style.styleData.glow);
-    orb.appendChild(glow);
+    // Horizontal stagger
+    const offsets = ['-20%', '10%', '-5%', '20%', '-15%'];
+    orb.style.marginLeft = offsets[idx % offsets.length];
 
-    const imgDiv = document.createElement('div');
-    imgDiv.className = 'orb-img';
-    imgDiv.style.background = idea.style.styleData.bg;
-    imgDiv.style.boxShadow = `inset -10px -10px 20px rgba(0,0,0,0.5), 0 0 15px ${idea.style.styleData.shadow}88`;
-    orb.appendChild(imgDiv);
+    const glowDiv = document.createElement('div');
+    glowDiv.className = 'orb-glow';
 
-    orb.addEventListener('click', () => { openDetail(idea.id); });
-    field.appendChild(orb);
+    const orbVis = document.createElement('div');
+    orbVis.style.cssText = `
+      width: 100%; height: 100%; border-radius: 50%;
+      background: ${idea.orbStyle.bg};
+      box-shadow: 0 0 30px ${idea.orbStyle.glow}, 0 0 60px ${idea.orbStyle.glow}55;
+    `;
+
+    orb.appendChild(glowDiv);
+    orb.appendChild(orbVis);
+
+    orb.addEventListener('click', () => openDetail(idea.id));
+    field.insertBefore(orb, field.firstChild);
   });
+
+  // Scroll to bottom (newest)
+  const space = document.getElementById('orb-space');
+  setTimeout(() => { space.scrollTop = space.scrollHeight; }, 100);
 }
 
-// ─── INPUT LOGIC ───────────────────────────────
+// ─── ADD IDEA ────────────────────────────────────
 document.getElementById('add-btn').addEventListener('click', () => {
   document.getElementById('idea-textarea').value = '';
   document.getElementById('similar-ideas').innerHTML = '';
   showScreen('input');
 });
 
-document.getElementById('input-back-btn').addEventListener('click', () => { showScreen('archive'); });
-
-document.getElementById('idea-textarea').addEventListener('input', (e) => {
-  const text = e.target.value.trim();
-  const sidebar = document.getElementById('similar-ideas');
-  sidebar.innerHTML = '';
-
-  if (text.length < 2) return;
-
-  const tokens = text.split(/\s+/).filter(t => t.length > 1);
-  const matched = ideas.filter(idea => tokens.some(token => idea.text.includes(token))).slice(0, 3);
-
-  matched.forEach(idea => {
-    const div = document.createElement('div');
-    div.className = 'similar-orb visible';
-    
-    const orbImg = document.createElement('div');
-    orbImg.className = 'similar-orb-img';
-    orbImg.style.background = idea.style.styleData.bg;
-    orbImg.style.boxShadow = `inset -3px -3px 7px rgba(0,0,0,0.4)`;
-    
-    const label = document.createElement('div');
-    label.className = 'similar-label';
-    label.textContent = idea.text.length > 20 ? idea.text.substring(0, 20) + '...' : idea.text;
-
-    div.appendChild(orbImg);
-    div.appendChild(label);
-    div.addEventListener('click', () => { openDetail(idea.id); });
-    sidebar.appendChild(div);
-  });
+document.getElementById('input-back-btn').addEventListener('click', () => {
+  showScreen('archive');
+  renderOrbs();
 });
 
+// Similar ideas on pause
+let similarTimer = null;
+document.getElementById('idea-textarea').addEventListener('input', () => {
+  clearTimeout(similarTimer);
+  similarTimer = setTimeout(() => {
+    showSimilarIdeas(document.getElementById('idea-textarea').value);
+  }, 1000);
+});
+
+function showSimilarIdeas(text) {
+  const container = document.getElementById('similar-ideas');
+  container.innerHTML = '';
+  if (!text.trim() || ideas.length === 0) return;
+
+  const words = text.toLowerCase().split(/\s+/);
+  const matches = ideas.filter(idea => {
+    const ideaWords = idea.text.toLowerCase().split(/\s+/);
+    return words.some(w => w.length > 2 && ideaWords.some(iw => iw.includes(w) || w.includes(iw)));
+  }).slice(0, 3);
+
+  matches.forEach((idea, i) => {
+    const el = document.createElement('div');
+    el.className = 'similar-orb';
+    el.style.animationDelay = (i * 0.5) + 's';
+
+    const orbEl = document.createElement('div');
+    orbEl.style.cssText = `
+      width:44px; height:44px; border-radius:50%;
+      background:${idea.orbStyle.bg};
+      box-shadow: 0 0 15px ${idea.orbStyle.glow};
+      flex-shrink:0;
+    `;
+
+    const label = document.createElement('div');
+    label.className = 'similar-label';
+    label.textContent = idea.text.substring(0, 40) + (idea.text.length > 40 ? '...' : '');
+
+    el.appendChild(orbEl);
+    el.appendChild(label);
+    el.addEventListener('click', () => openDetail(idea.id));
+    container.appendChild(el);
+
+    setTimeout(() => el.classList.add('visible'), 50 * i);
+  });
+}
+
+// ─── FINISH: Save idea ────────────────────────────
 document.getElementById('finish-btn').addEventListener('click', () => {
   const text = document.getElementById('idea-textarea').value.trim();
-  if (!text) {
-    showNotif('내용을 입력해 주세요.');
-    return;
-  }
+  if (!text) return;
 
-  const styleData = randomOrbStyle();
-  const newIdea = {
+  const idea = {
     id: Date.now(),
-    text: text,
-    date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }),
-    style: {
-      styleData: styleData,
-      floatDur: (5 + Math.random() * 4).toFixed(1) + 's',
-      floatDelay: (Math.random() * -5).toFixed(1) + 's'
-    }
+    text,
+    createdAt: Date.now(),
+    orbStyle: randomOrbStyle(),
   };
-
-  ideas.push(newIdea);
+  ideas.push(idea);
   saveIdeas();
 
+  // Launch animation
+  launchOrb(idea);
+});
+
+function launchOrb(idea) {
   const btn = document.getElementById('finish-btn');
   const rect = btn.getBoundingClientRect();
-  const launch = document.createElement('div');
-  launch.className = 'launch-orb';
-  launch.style.cssText = `
-    left: ${rect.left + rect.width/2}px; top: ${rect.top}px;
-    width: 40px; height: 40px; background: ${styleData.bg};
-    box-shadow: 0 0 30px ${styleData.shadow};
-    transform: translate(-50%, -50%) scale(1);
-    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+
+  const orb = document.createElement('div');
+  orb.className = 'launch-orb';
+  const size = 80;
+  orb.style.cssText = `
+    width: ${size}px; height: ${size}px;
+    background: ${idea.orbStyle.bg};
+    box-shadow: 0 0 40px ${idea.orbStyle.glow}, 0 0 80px ${idea.orbStyle.glow};
+    left: ${rect.left + rect.width/2 - size/2}px;
+    top: ${rect.top + rect.height/2 - size/2}px;
+    opacity: 1;
+    transition: top 1.2s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 0.4s ease 0.9s, transform 1.2s ease;
+    transform: scale(1);
   `;
-  document.body.appendChild(launch);
+  document.body.appendChild(orb);
 
   setTimeout(() => {
-    launch.style.top = '-100px';
-    launch.style.transform = 'translate(-50%, -50%) scale(0.2)';
-    launch.style.opacity = '0';
+    orb.style.top = '-100px';
+    orb.style.opacity = '0';
+    orb.style.transform = 'scale(0.5)';
   }, 50);
 
   setTimeout(() => {
-    launch.remove();
+    orb.remove();
     showScreen('archive');
-    renderArchive();
-    showNotif('아이디어가 우주 리포지토리에 보관되었습니다.');
-  }, 800);
-});
+    renderOrbs();
+    showNotif('✦ 아이디어가 저장됐어요');
+  }, 1300);
+}
 
-// ─── DETAIL LOGIC ──────────────────────────────
+// ─── DETAIL ────────────────────────────────────
 function openDetail(id) {
   const idea = ideas.find(i => i.id === id);
   if (!idea) return;
-
   currentDetailId = id;
   isEditing = false;
 
-  const heroView = document.getElementById('detail-orb-view');
-  heroView.style.background = idea.style.styleData.bg;
-  heroView.style.boxShadow = `inset -15px -15px 30px rgba(0,0,0,0.6), 0 0 40px ${idea.style.styleData.shadow}`;
-  
-  document.getElementById('detail-orb-glow').style.setProperty('--glow-color', idea.style.styleData.glow);
-  document.getElementById('detail-date').textContent = idea.date;
+  document.getElementById('detail-orb-img').style.cssText = `
+    width:100%; height:100%; border-radius:50%; display:block;
+    background:${idea.orbStyle.bg};
+    box-shadow: 0 0 40px ${idea.orbStyle.glow};
+  `;
+  document.getElementById('detail-orb-img').src = '';
+  document.getElementById('detail-orb-glow').style.background =
+    `radial-gradient(circle, ${idea.orbStyle.glow} 0%, transparent 70%)`;
+  document.getElementById('detail-date').textContent =
+    new Date(idea.createdAt).toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' });
   document.getElementById('detail-text').textContent = idea.text;
   document.getElementById('detail-text').style.display = 'block';
   document.getElementById('detail-edit-area').style.display = 'none';
-
-  document.getElementById('edit-btn').style.display = 'inline-block';
-  document.getElementById('save-btn').style.display = 'none';
+  document.getElementById('detail-edit-area').value = idea.text;
+  document.querySelector('.edit-btn').textContent = 'edit';
+  document.querySelector('.save-btn').style.display = 'none';
+  document.querySelector('.edit-btn').style.display = '';
 
   showScreen('detail');
 }
 
 document.getElementById('detail-back-btn').addEventListener('click', () => {
   showScreen('archive');
-  renderArchive();
+  renderOrbs();
 });
 
 document.getElementById('edit-btn').addEventListener('click', () => {
-  isEditing = true;
-  const txt = document.getElementById('detail-text').textContent;
-  const area = document.getElementById('detail-edit-area');
-  
-  area.value = txt;
-  document.getElementById('detail-text').style.display = 'none';
-  area.style.display = 'block';
-  area.focus();
-
-  document.getElementById('edit-btn').style.display = 'none';
-  document.getElementById('save-btn').style.display = 'inline-block';
+  if (!isEditing) {
+    isEditing = true;
+    document.getElementById('detail-text').style.display = 'none';
+    const ea = document.getElementById('detail-edit-area');
+    ea.style.display = 'block';
+    ea.focus();
+    document.querySelector('.save-btn').style.display = '';
+    document.querySelector('.edit-btn').style.display = 'none';
+  }
 });
 
 document.getElementById('save-btn').addEventListener('click', () => {
-  const area = document.getElementById('detail-edit-area');
-  const newText = area.value.trim();
-
-  if (!newText) {
-    showNotif('내용을 작성해 주세요.');
-    return;
-  }
-
-  const ideaIndex = ideas.findIndex(i => i.id === currentDetailId);
-  if (ideaIndex !== -1) {
-    ideas[ideaIndex].text = newText;
-    saveIdeas();
-  }
-
+  const newText = document.getElementById('detail-edit-area').value.trim();
+  if (!newText) return;
+  const idx = ideas.findIndex(i => i.id === currentDetailId);
+  if (idx === -1) return;
+  ideas[idx].text = newText;
+  saveIdeas();
   document.getElementById('detail-text').textContent = newText;
   document.getElementById('detail-text').style.display = 'block';
-  area.style.display = 'none';
-
-  document.getElementById('edit-btn').style.display = 'inline-block';
-  document.getElementById('save-btn').style.display = 'none';
+  document.getElementById('detail-edit-area').style.display = 'none';
+  document.querySelector('.save-btn').style.display = 'none';
+  document.querySelector('.edit-btn').style.display = '';
   isEditing = false;
-  showNotif('수정 사항이 아카이브에 영구 기록되었습니다.');
+  showNotif('✦ 수정됐어요');
 });
 
 document.getElementById('delete-btn').addEventListener('click', () => {
-  if (confirm('이 사유의 오라를 무(無)의 상태로 되돌리시겠습니까?')) {
-    ideas = ideas.filter(i => i.id !== currentDetailId);
-    saveIdeas();
-    showScreen('archive');
-    renderArchive();
-    showNotif('오브젝트가 성간 파편으로 흩어졌습니다.');
-  }
+  if (!confirm('이 아이디어를 삭제할까요?')) return;
+  ideas = ideas.filter(i => i.id !== currentDetailId);
+  saveIdeas();
+  showScreen('archive');
+  renderOrbs();
+  showNotif('✦ 삭제됐어요');
 });
 
-window.addEventListener('DOMContentLoaded', () => {
-  // 초기화 로직 필요시 추가
-});
+// ─── NOTIFICATION ────────────────────────────────
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2500);
+}
+
+// ─── DETAIL ORB: use div instead of img ──────────
+// Fix: detail hero orb is a div with gradient
+document.getElementById('detail-orb-hero').innerHTML = `
+  <div class="detail-orb-glow" id="detail-orb-glow"></div>
+  <div id="detail-orb-vis" style="width:100%;height:100%;border-radius:50%;"></div>
+`;
+
+function openDetailFixed(id) {
+  const idea = ideas.find(i => i.id === id);
+  if (!idea) return;
+  currentDetailId = id;
+  isEditing = false;
+
+  document.getElementById('detail-orb-vis').style.cssText = `
+    width:100%; height:100%; border-radius:50%;
+    background:${idea.orbStyle.bg};
+    box-shadow: 0 0 40px ${idea.orbStyle.glow};
+  `;
+  document.getElementById('detail-orb-glow').style.background =
+    `radial-gradient(circle, ${idea.orbStyle.glow} 0%, transparent 70%)`;
+  document.getElementById('detail-date').textContent =
+    new Date(idea.createdAt).toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('detail-text').textContent = idea.text;
+  document.getElementById('detail-text').style.display = 'block';
+  document.getElementById('detail-edit-area').style.display = 'none';
+  document.getElementById('detail-edit-area').value = idea.text;
+  document.querySelector('.save-btn').style.display = 'none';
+  document.querySelector('.edit-btn').style.display = '';
+
+  showScreen('detail');
+}
+
+// Override old openDetail
+window.openDetail = openDetailFixed;
 </script>
 </body>
 </html>
