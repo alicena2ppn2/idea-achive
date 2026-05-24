@@ -856,11 +856,11 @@ function saveIdeas() {
 // ─── STARS ──────────────────────────────────────
 // Chubby 4-point star path (like the reference image) — cubic bezier curves
 function chubbyStar4Path(r) {
-  const c = r * 0.05;
-  const t = r * 0.06;
-  return `M 0,${-r} C ${t},${-c} ${c},${-t} ${r},0 C ${c},${t} ${t},${c} 0,${r} C ${-t},${c} ${-c},${t} ${-r},0 C ${-c},${-t} ${-t},${-c} 0,${-r} Z`;
+  const rH = r * 1.8; // 가로축을 1.8배 길게
+  const c = r * 0.04;
+  const t = r * 0.05;
+  return `M 0,${-r} C ${t},${-c} ${c},${-t} ${rH},0 C ${c},${t} ${t},${c} 0,${r} C ${-t},${c} ${-c},${t} ${-rH},0 C ${-c},${-t} ${-t},${-c} 0,${-r} Z`;
 }
-
 function createStar8(container, x, y, size, color, dur, delay, minOp) {
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
