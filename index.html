@@ -596,7 +596,7 @@
   .detail-date {
     font-size: 0.75rem;
     letter-spacing: 0.2em;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.65);
     text-transform: uppercase;
   }
 
@@ -1413,8 +1413,11 @@ function openDetail(id) {
     svgEl.replaceWith(newSvg);
   }
 
-  document.getElementById('detail-date').textContent =
-    new Date(idea.createdAt).toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' });
+  const d = new Date(idea.createdAt);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  document.getElementById('detail-date').textContent = `${yyyy}.${mm}.${dd}`;
   document.getElementById('detail-text').textContent = idea.text;
   document.getElementById('detail-text').style.display = 'block';
   document.getElementById('detail-edit-area').style.display = 'none';
