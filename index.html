@@ -648,7 +648,7 @@
   .action-btn:hover { border-color: rgba(255,255,255,0.4); color: white; }
   .action-btn.delete { border-color: rgba(244,114,182,0.3); color: rgba(244,114,182,0.6); }
   .action-btn.delete:hover { border-color: var(--pink); color: var(--pink); background: rgba(244,114,182,0.05); }
-  .action-btn.save { border-color: rgba(167,139,250,0.5); color: rgba(167,139,250,0.8); display: none; }
+  .action-btn.save { border-color: rgba(167,139,250,0.5); color: rgba(167,139,250,0.8); }
   .action-btn.save:hover { border-color: var(--purple); color: var(--purple); }
 
   /* ══════════════════════════════
@@ -808,7 +808,7 @@
     <textarea class="detail-edit-area" id="detail-edit-area"></textarea>
     <div class="detail-actions">
       <button class="action-btn edit-btn" id="edit-btn">edit</button>
-      <button class="action-btn save save-btn" id="save-btn">save</button>
+      <button class="action-btn save save-btn" id="save-btn" style="display:none;">save</button>
       <button class="action-btn delete" id="delete-btn">delete</button>
     </div>
   </div>
@@ -826,6 +826,8 @@ let isEditing = false;
 // ─── PERSISTENT STORAGE (계정 연동 + localStorage 폴백) ─
 const STORAGE_KEY = 'idea-archive-ideas';
 
+let ideasReady = false;
+
 async function loadIdeas() {
   try {
     if (window.storage) {
@@ -837,7 +839,7 @@ async function loadIdeas() {
   } catch (e) {
     try { ideas = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(_) { ideas = []; }
   }
-  renderOrbs();
+  ideasReady = true;
 }
 
 async function saveIdeas() {
@@ -1082,9 +1084,10 @@ document.getElementById('start-btn').addEventListener('click', () => {
 
   overlay.style.transition = 'opacity 0.3s ease';
   overlay.style.opacity = '0.8';
-  setTimeout(() => {
+  setTimeout(async () => {
+    // 데이터 로드 완료 대기
+    if (!ideasReady) await loadIdeas();
     showScreen('archive');
-    // ↓ 여기에 추가
     let count = 0;
     const spawnInterval = setInterval(() => {
       const colors = ['#f472b6','#67e8f9','#fde68a','#a78bfa','#fb923c','#34d399'];
@@ -1102,7 +1105,6 @@ document.getElementById('start-btn').addEventListener('click', () => {
       count++;
       if (count >= 30) clearInterval(spawnInterval);
     }, 80);
-    // ↑ 여기까지
     renderOrbs();
     overlay.style.opacity = '0';
     starsContainer.innerHTML = '';
