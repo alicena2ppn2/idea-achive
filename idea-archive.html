@@ -812,25 +812,33 @@ let ideas = [];
 let currentDetailId = null;
 let isEditing = false;
 
-// ─── PERSISTENT STORAGE (Claude 계정 연동) ────────
+// ─── PERSISTENT STORAGE (계정 연동 + localStorage 폴백) ─
+const STORAGE_KEY = 'idea-archive-ideas';
+
 async function loadIdeas() {
   try {
-    const result = await window.storage.get('idea-archive-ideas');
-    if (result && result.value) {
-      ideas = JSON.parse(result.value);
+    if (window.storage) {
+      const result = await window.storage.get(STORAGE_KEY);
+      ideas = result ? JSON.parse(result.value) : [];
+    } else {
+      ideas = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     }
   } catch (e) {
-    // 키 없음 = 처음 사용
-    ideas = [];
+    try { ideas = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(_) { ideas = []; }
   }
   renderOrbs();
 }
 
 async function saveIdeas() {
+  const data = JSON.stringify(ideas);
   try {
-    await window.storage.set('idea-archive-ideas', JSON.stringify(ideas));
+    if (window.storage) {
+      await window.storage.set(STORAGE_KEY, data);
+    } else {
+      localStorage.setItem(STORAGE_KEY, data);
+    }
   } catch (e) {
-    console.error('저장 오류:', e);
+    try { localStorage.setItem(STORAGE_KEY, data); } catch(_) {}
   }
 }
 
@@ -1311,10 +1319,7 @@ function launchOrb(idea) {
   }, 1300);
 }
 
-// ─── DETAIL ────────────────────────────────────
-function openDetail(id) {
-  openDetailFixed(id);
-}
+// ─── DETAIL (forward ref resolved below) ─────────
 
 document.getElementById('detail-back-btn').addEventListener('click', () => {
   showScreen('archive');
@@ -1367,14 +1372,14 @@ function showNotif(msg) {
 }
 
 // ─── DETAIL: star hero ───────────────────────────
-function openDetailFixed(id) {
+function openDetail(id) {
   const idea = ideas.find(i => i.id === id);
   if (!idea) return;
   currentDetailId = id;
   isEditing = false;
 
   const size = idea.orbStyle.size || 52;
-  const heroEl = document.getElementById('detail-orb-hero');
+
   // Update glow ring color
   document.getElementById('detail-orb-glow').style.background =
     `radial-gradient(circle, ${idea.orbStyle.glow} 0%, transparent 70%)`;
@@ -1401,7 +1406,7 @@ function openDetailFixed(id) {
   showScreen('detail');
 }
 
-window.openDetail = openDetailFixed;
+window.openDetail = openDetail;
 </script>
 </body>
 </html>
