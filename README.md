@@ -95,7 +95,7 @@ Functions:
 
 ---
 
-# 🛠 Tech Stack
+# Tech Stack
 
 ## Frontend
 
