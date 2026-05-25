@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>idea archive</title>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Bodoni+Moda:ital,wght@1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+KR:wght@300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Bodoni+Moda:ital,wght@1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+KR:wght@300&family=Jeju+Gothic&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -424,27 +424,29 @@
 
   .idea-textarea {
     width: 100%;
-    height: 56px;
-    min-height: unset;
+    height: auto;
+    min-height: 56px;
     background: rgba(13, 31, 60, 0.55);
     border: 1px solid rgba(103, 232, 249, 0.15);
-    border-radius: 999px;
-    padding: 0 28px;
+    border-radius: 28px;
+    padding: 16px 28px;
     color: rgba(235, 245, 255, 0.92);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-style: italic;
-    line-height: 56px;
+    font-family: 'Jeju Gothic', sans-serif;
+    font-weight: 400;
+    font-size: 1.1rem;
+    font-style: normal;
+    line-height: 1.7;
     resize: none;
     outline: none;
     overflow: hidden;
-    transition: border-color 0.4s, box-shadow 0.4s, background 0.4s;
+    transition: border-color 0.4s, box-shadow 0.4s, background 0.4s, border-radius 0.3s;
     caret-color: rgba(103, 232, 249, 0.9);
     box-shadow: 0 2px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(103,232,249,0.06);
   }
   .idea-textarea::placeholder {
     color: rgba(167,139,250,0.3);
-    font-style: italic;
+    font-style: normal;
+    font-family: 'Jeju Gothic', sans-serif;
   }
   .idea-textarea:focus {
     border-color: rgba(103, 232, 249, 0.3);
@@ -1213,7 +1215,10 @@ function renderOrbs() {
 
 // ─── ADD IDEA ────────────────────────────────────
 document.getElementById('add-btn').addEventListener('click', () => {
-  document.getElementById('idea-textarea').value = '';
+  const ta = document.getElementById('idea-textarea');
+  ta.value = '';
+  ta.style.height = 'auto';
+  ta.style.borderRadius = '28px';
   document.getElementById('similar-ideas').innerHTML = '';
   showScreen('input');
 });
@@ -1223,9 +1228,15 @@ document.getElementById('input-back-btn').addEventListener('click', () => {
   renderOrbs();
 });
 
-// Similar ideas on pause
+// Similar ideas on pause + textarea auto-resize
 let similarTimer = null;
-document.getElementById('idea-textarea').addEventListener('input', () => {
+document.getElementById('idea-textarea').addEventListener('input', function() {
+  // Auto-resize
+  this.style.height = 'auto';
+  this.style.height = this.scrollHeight + 'px';
+  // Round corners only when single line
+  this.style.borderRadius = this.scrollHeight > 70 ? '20px' : '28px';
+
   clearTimeout(similarTimer);
   similarTimer = setTimeout(() => {
     showSimilarIdeas(document.getElementById('idea-textarea').value);
